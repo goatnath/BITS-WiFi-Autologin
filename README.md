@@ -72,15 +72,15 @@ To ensure you are automatically logged in every time you open your laptop, you c
 
 3.**Enable and start the service:**
 
-	```
 	sudo systemctl daemon-reload
 	sudo systemctl enable campnet.service
 	sudo systemctl start campnet.service
 
-4. **Check the status:**
-	```
+4.**Check the status:**
+
 	systemctl status campnet.service
 
 
 🤝 **Contributing**
+
 If the campus gateway URL changes or you have suggestions for the reconnection logic, feel free to open a Pull Request.
