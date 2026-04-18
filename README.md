@@ -30,7 +30,16 @@ A lightweight Python automation tool to handle the **BITS Goa Campnet** login pr
     ```	
     pip install requests
 
-4. **Run the Python Script:**
+4. **Configure Credentials:**
+   ```
+   nano .env
+	```
+   Paste the following into the file(replace with your credentials)
+   ```
+   CAMPUS_ID=Username
+   CAMPUS_PASSWORD=Password
+
+5. **Run the Python Script:**
     ``` 
     python campnet_login.py
 
@@ -72,3 +81,6 @@ To ensure you are automatically logged in every time you open your laptop, you c
 	```
 	systemctl status campnet.service
 
+
+🤝 **Contributing**
+If the campus gateway URL changes or you have suggestions for the reconnection logic, feel free to open a Pull Request.
