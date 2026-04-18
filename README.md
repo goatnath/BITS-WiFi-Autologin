@@ -43,23 +43,23 @@ To ensure you are automatically logged in every time you open your laptop, you c
    sudo nano /etc/systemd/system/campnet.service
 
 2. **Paste the following configuration (Replace your-username with your actual username, like goatnath):**
-```bash
-Ini, TOML
-[Unit]
-Description=BITS Goa Campnet Auto-Login
-After=network-online.target
-Wants=network-online.target
+	```bash
+	Ini, TOML
+	[Unit]
+	Description=BITS Goa Campnet Auto-Login
+	After=network-online.target
+	Wants=network-online.target
 
-[Service]
-Type=simple
-User=your-username
-WorkingDirectory=/home/your-username/Scripts/wifi-autoconnect
-ExecStart=/usr/bin/python /home/your-username/Scripts/wifi-autoconnect/campnet_login.py
-Restart=always
-RestartSec=10
+	[Service]
+	Type=simple
+	User=your-username
+	WorkingDirectory=/home/your-username/Scripts/wifi-autoconnect
+	ExecStart=/usr/bin/python /home/your-username/Scripts/wifi-autoconnect/campnet_login.py
+	Restart=always
+	RestartSec=10
 
-[Install]
-WantedBy=multi-user.target
+	[Install]
+	WantedBy=multi-user.target
 
 3.**Enable and start the service:**
 
