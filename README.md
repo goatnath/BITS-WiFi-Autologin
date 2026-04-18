@@ -22,13 +22,16 @@ A lightweight Python automation tool to handle the **BITS Goa Campnet** login pr
    cd ~/Scripts
 
 2. **Clone the Repository:**
+    ```bash 
     git clone [https://github.com/goatnath/wifi-autoconnect.git](https://github.com/goatnath/wifi-autoconnect.git)
     cd wifi-autoconnect
 
 3. **Install Dependencies:**
+    ```	
     pip install requests
 
 4. **Run the Python Script:**
+    ``` 
     python campnet_login.py
 
 ## ⚙️ Automation (Linux/systemd)
@@ -40,7 +43,7 @@ To ensure you are automatically logged in every time you open your laptop, you c
    sudo nano /etc/systemd/system/campnet.service
 
 2. **Paste the following configuration (Replace your-username with your actual username, like goatnath):**
-
+```bash
 Ini, TOML
 [Unit]
 Description=BITS Goa Campnet Auto-Login
@@ -60,12 +63,12 @@ WantedBy=multi-user.target
 
 3.**Enable and start the service:**
 
-
+	```
 	sudo systemctl daemon-reload
 	sudo systemctl enable campnet.service
 	sudo systemctl start campnet.service
 
 4. **Check the status:**
-	
+	```
 	systemctl status campnet.service
 
