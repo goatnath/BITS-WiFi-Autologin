@@ -15,6 +15,7 @@ USERNAME = os.getenv("CAMPUS_ID")
 PASSWORD = os.getenv("CAMPUS_PASSWORD")
 # ------------------------
 
+# The 8090 portal handles authentication at the same URL via POST
 PORTAL_URL = "https://campnet.bits-goa.ac.in:8090/httpclient.html"
 CHECK_URL = "http://connectivitycheck.gstatic.com/generate_204"
 
@@ -27,34 +28,49 @@ def is_connected():
         return False
 
 def login():
-    """Attempts to log into the BITS Goa network."""
+    """Attempts to log into the Cyberoam/Sophos portal."""
     if not USERNAME or not PASSWORD:
-        print("Error: CAMPUS_ID or CAMPUS_PASSWORD not found in .env file!")
+        print(f"[{time.strftime('%H:%M:%S')}] Error: Credentials missing in .env")
         return False
 
+    # Cyberoam/Sophos 8090 specific payload
+    # 'mode': 191 tells the server this is a LOGIN attempt
     data = {
-        "user": USERNAME,
+        "mode": "191",
+        "username": USERNAME,
         "password": PASSWORD,
-        "cmd": "authenticate",
-        "Login": "Login"
+        "a": int(time.time() * 1000), # Some portals require a timestamp
+        "producttype": "0"
     }
     
     try:
-        print(f"[{time.strftime('%H:%M:%S')}] Attempting to connect to campnet as {USERNAME}...")
-        response = requests.post(PORTAL_URL, data=data, timeout=10, verify=False)
+        print(f"[{time.strftime('%H:%M:%S')}] Attempting 8090 login for {USERNAME}...")
         
-        if "Successful" in response.text or response.status_code == 200:
+        response = requests.post(
+            PORTAL_URL, 
+            data=data, 
+            timeout=10, 
+            verify=False,
+            proxies={'http': None, 'https': None}
+        )
+        
+        # Cyberoam returns an XML response usually containing <message>
+        if "Successful" in response.text or "status=\"login\"" in response.text:
             print(f"[{time.strftime('%H:%M:%S')}] Login successful!")
             return True
+        elif "maximum login limit" in response.text:
+            print(f"[{time.strftime('%H:%M:%S')}] Already logged in elsewhere.")
+            return True
         else:
-            print(f"[{time.strftime('%H:%M:%S')}] Login failed. Check your ID/Password in .env")
+            print(f"[{time.strftime('%H:%M:%S')}] Login failed. Check your credentials.")
             return False
-    except requests.exceptions.RequestException as e:
-        print(f"[{time.strftime('%H:%M:%S')}] Portal unreachable (Wi-Fi disconnected?)")
+            
+    except requests.exceptions.RequestException:
+        print(f"[{time.strftime('%H:%M:%S')}] Portal unreachable. Check Wi-Fi connection.")
         return False
 
 if __name__ == "__main__":
-    print("Campnet Autologin Service Started (Console Mode)...")
+    print("--- BITS Goa 8090 Autologin ---")
     last_status = None 
 
     while True:
@@ -62,11 +78,10 @@ if __name__ == "__main__":
         
         if current_status:
             if last_status != True:
-                print(f"[{time.strftime('%H:%M:%S')}] Internet connection verified. Standing by...")
+                print(f"[{time.strftime('%H:%M:%S')}] Online. Standing by...")
             last_status = True
-            time.sleep(300) # Check every 5 minutes
+            time.sleep(300) 
         else:
             success = login()
             last_status = success
-            # If failed, try again in 10s; if succeeded, wait 5 mins
             time.sleep(300 if success else 10)
