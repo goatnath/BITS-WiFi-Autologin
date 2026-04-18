@@ -12,6 +12,7 @@ A lightweight Python automation tool to handle the **BITS Goa Campnet** login pr
 * **Requests Library:**
   ```bash
   pip install requests
+  pip install python-dotenv
 
 ## 📥 Installation & Setup
 
