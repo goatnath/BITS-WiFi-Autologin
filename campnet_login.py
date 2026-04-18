@@ -15,7 +15,7 @@ USERNAME = os.getenv("CAMPUS_ID")
 PASSWORD = os.getenv("CAMPUS_PASSWORD")
 # ------------------------
 
-PORTAL_URL = "https://campnet.bits-goa.ac.in:8001/cgi-bin/login.cgi"
+PORTAL_URL = "https://campnet.bits-goa.ac.in:8090/httpclient.html"
 CHECK_URL = "http://connectivitycheck.gstatic.com/generate_204"
 
 def is_connected():
