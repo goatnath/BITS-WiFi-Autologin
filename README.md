@@ -16,7 +16,7 @@ A lightweight Python automation tool to handle the **BITS Goa Campnet** login pr
 For people who use Arch-based distros or Arch, it's better to install these packages using pacman
   ```bash
 	sudo pacman -S requests
-	sudo pacman -s python-dotenv
+	sudo pacman -S python-dotenv
 ```
 
 ## 📥 Installation & Setup
