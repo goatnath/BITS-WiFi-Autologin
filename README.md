@@ -29,7 +29,7 @@ For people who use Arch-based distros or Arch, it's better to install these pack
 
 2. **Clone the Repository:**
     ```bash 
-    git clone [https://github.com/goatnath/wifi-autoconnect.git](https://github.com/goatnath/wifi-autoconnect.git)
+    git clone https://github.com/goatnath/wifi-autoconnect.git
     cd wifi-autoconnect
 
 3. **Install Dependencies:**
