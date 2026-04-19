@@ -59,7 +59,7 @@ To ensure you are automatically logged in every time you open your laptop, you c
 
 2. **Paste the following configuration (Replace your-username with your actual username, like goatnath):**
 	```bash
-	Ini, TOML
+	
 	[Unit]
 	Description=BITS Goa Campnet Auto-Login
 	After=network-online.target
