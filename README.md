@@ -67,12 +67,10 @@ To ensure you are automatically logged in every time you open your laptop, you c
 	StartLimitIntervalSec=0
 
 	[Service]
-	User=goatnath
-	ExecStart=/usr/bin/python -u /home/goatnath/Scripts/wifi-autoconnect/campnet_login.py
+	User=your-username
+	ExecStart=/usr/bin/python -u /home/your-username/Scripts/wifi-autoconnect/campnet_login.py
 	Restart=always
-	# Give the WiFi a moment to breathe between attempts
 	RestartSec=10
-	# Ensures systemd knows it's a simple long-running process
 	Type=simple
 
 	[Install]
