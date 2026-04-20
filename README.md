@@ -75,6 +75,8 @@ To ensure you are automatically logged in every time you open your laptop, you c
 
 	[Install]
 	WantedBy=multi-user.target
+ Click Ctrl+O-->Enter-->Ctrl+X
+
 
 3.**Enable and start the service:**
 
@@ -86,6 +88,22 @@ To ensure you are automatically logged in every time you open your laptop, you c
 
 	systemctl status campnet.service
 
+5.**Create a new file:(A Dispatcher Script)**
+   ```bash
+   sudo nano /etc/NetworkManager/dispatcher.d/99-campnet
+```
+Paste the following configuration
+```
+#!/bin/sh
+if [ "$2" = "up" ]; then
+    systemctl restart campnet.service
+fi
+```
+Click Ctrl+O-->Enter-->Ctrl+X
+Make it Executable
+```
+sudo chmod +x /etc/NetworkManager/dispatcher.d/99-campnet
+```
 
 🤝 **Contributing**
 
