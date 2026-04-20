@@ -64,14 +64,16 @@ To ensure you are automatically logged in every time you open your laptop, you c
 	Description=BITS Goa Campnet Auto-Login
 	After=network-online.target
 	Wants=network-online.target
+	StartLimitIntervalSec=0
 
 	[Service]
-	Type=simple
-	User=your-username
-	WorkingDirectory=/home/your-username/Scripts/wifi-autoconnect
-	ExecStart=/usr/bin/python /home/your-username/Scripts/wifi-autoconnect/campnet_login.py
+	User=goatnath
+	ExecStart=/usr/bin/python -u /home/goatnath/Scripts/wifi-autoconnect/campnet_login.py
 	Restart=always
+	# Give the WiFi a moment to breathe between attempts
 	RestartSec=10
+	# Ensures systemd knows it's a simple long-running process
+	Type=simple
 
 	[Install]
 	WantedBy=multi-user.target
