@@ -1,5 +1,7 @@
 # 🚀 wifi-autoconnect
 
+[![Python CI](https://github.com/goatnath/BITS-WiFi-Autologin/actions/workflows/ci.yml/badge.svg)](https://github.com/goatnath/BITS-WiFi-Autologin/actions/workflows/ci.yml)
+
 A lightweight Python automation tool to handle the **BITS Goa Campnet** login process. This script eliminates the need to manually interact with the browser portal every time you connect to the campus Wi-Fi.
 
 ## 🛠 Features
