@@ -1,112 +1,72 @@
-# 🚀 wifi-autoconnect
+# BITS Goa Wi-Fi autologin
 
 [![Python CI](https://github.com/goatnath/BITS-WiFi-Autologin/actions/workflows/ci.yml/badge.svg)](https://github.com/goatnath/BITS-WiFi-Autologin/actions/workflows/ci.yml)
 
-A lightweight Python automation tool to handle the **BITS Goa Campnet** login process. This script eliminates the need to manually interact with the browser portal every time you connect to the campus Wi-Fi.
+A Python script that checks connectivity and attempts to log in to the BITS Goa Campnet portal when offline.
 
-## 🛠 Features
-* **Automatic Authentication:** Logs into the Fortinet/CyberRoam gateway via terminal.
-* **Session Persistence:** Designed to keep your connection active without manual intervention.
-* **Terminal-Friendly:** Perfect for headless setups or power users on Linux.
+## Quick start
 
-## 📋 Prerequisites
-* **Python 3.x**
-* **Requests Library:**
-  ```bash
-  pip install requests
-  pip install python-dotenv
-For people who use Arch-based distros or Arch, it's better to install these packages using pacman
-  ```bash
-	sudo pacman -S requests
-	sudo pacman -S python-dotenv
+Requires Python 3, Git, and access to the BITS Goa network.
+
+```bash
+mkdir -p ~/Scripts
+cd ~/Scripts
+git clone https://github.com/goatnath/BITS-WiFi-Autologin.git
+cd BITS-WiFi-Autologin
+python3 -m venv .venv
+.venv/bin/python -m pip install requests python-dotenv
 ```
 
-## 📥 Installation & Setup
+Create a `.env` file in the repository directory, with your own credentials:
 
-1. **Create your Scripts directory:**
-   If you don't have one already, create a folder for your automation tools:
-   ```bash
-   mkdir -p ~/Scripts
-   cd ~/Scripts
-
-2. **Clone the Repository:**
-    ```bash 
-    git clone https://github.com/goatnath/wifi-autoconnect.git
-    cd wifi-autoconnect
-
-3. **Install Dependencies:**
-    ```	
-    pip install requests
-
-4. **Configure Credentials:**
-   ```
-   nano .env
-	```
-   Paste the following into the file(replace with your credentials)
-   ```
-   CAMPUS_ID=Username
-   CAMPUS_PASSWORD=Password
-
-5. **Run the Python Script:**
-    ``` 
-    python campnet_login.py
-
-## ⚙️ Automation (Linux/systemd)
-
-To ensure you are automatically logged in every time you open your laptop, you can set this up as a background service.
-
-1. **Create the service file:**
-   ```bash
-   sudo nano /etc/systemd/system/campnet.service
-
-2. **Paste the following configuration (Replace your-username with your actual username, like goatnath):**
-	```bash
-	
-	[Unit]
-	Description=BITS Goa Campnet Auto-Login
-	After=network-online.target
-	Wants=network-online.target
-	StartLimitIntervalSec=0
-
-	[Service]
-	User=your-username
-	ExecStart=/usr/bin/python -u /home/your-username/Scripts/wifi-autoconnect/campnet_login.py
-	Restart=always
-	RestartSec=10
-	Type=simple
-
-	[Install]
-	WantedBy=multi-user.target
- Click Ctrl+O-->Enter-->Ctrl+X
-
-
-3.**Enable and start the service:**
-
-	sudo systemctl daemon-reload
-	sudo systemctl enable campnet.service
-	sudo systemctl start campnet.service
-
-4.**Check the status:**
-
-	systemctl status campnet.service
-
-5.**Create a new file:(A Dispatcher Script)**
-   ```bash
-   sudo nano /etc/NetworkManager/dispatcher.d/99-campnet
-```
-Paste the following configuration
-```
-#!/bin/sh
-if [ "$2" = "up" ]; then
-    systemctl restart campnet.service
-fi
-```
-Click Ctrl+O-->Enter-->Ctrl+X
-Make it Executable
-```
-sudo chmod +x /etc/NetworkManager/dispatcher.d/99-campnet
+```dotenv
+CAMPUS_ID=your_username
+CAMPUS_PASSWORD=your_password
 ```
 
-🤝 **Contributing**
+Restrict access to the credentials and start the script:
 
-If the campus gateway URL changes or you have suggestions for the reconnection logic, feel free to open a Pull Request.
+```bash
+chmod 600 .env
+.venv/bin/python -u campnet_login.py
+```
+
+The script runs continuously. Stop it with Ctrl+C. It checks connectivity every five minutes when online and retries failed logins after ten seconds.
+
+**Security:** The script currently disables TLS certificate verification for the portal. This means it cannot verify the portal's identity when sending credentials. Use it only if you understand that risk.
+
+## Start automatically with systemd
+
+The following assumes the quick start directory and virtual environment above. Create `~/.config/systemd/user/campnet.service`:
+
+```ini
+[Unit]
+Description=BITS Goa Campnet autologin
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Scripts/BITS-WiFi-Autologin
+ExecStart=%h/Scripts/BITS-WiFi-Autologin/.venv/bin/python -u %h/Scripts/BITS-WiFi-Autologin/campnet_login.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+```
+
+Enable it and inspect its logs:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now campnet.service
+systemctl --user status campnet.service
+journalctl --user -u campnet.service -f
+```
+
+To stop and disable it, run `systemctl --user disable --now campnet.service`. The user service starts when your user systemd session starts; it does not by itself guarantee login before you sign in.
+
+## Contributing
+
+If the campus gateway URL changes or you have suggestions for the reconnection logic, open an issue or pull request.
+
